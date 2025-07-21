@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  petclinic:
+    image: {{ docker_image | default("your-dockerhub-user/petclinic:latest") }}
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://{{ rds_endpoint }}:3306/petclinic
+      - SPRING_DATASOURCE_USERNAME={{ db_username }}
+      - SPRING_DATASOURCE_PASSWORD={{ db_password }}

@@ -1,0 +1,29 @@
+- name: Install Docker
+  amazon.aws.ec2_instance:
+    # not used here, just placeholder comment
+
+- name: Install Docker package
+  yum:
+    name: docker
+    state: present
+
+- name: Start Docker service
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Add user to docker group
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+
+- name: Install pip
+  yum:
+    name: python3-pip
+    state: present
+
+- name: Install docker-compose
+  pip:
+    name: docker-compose

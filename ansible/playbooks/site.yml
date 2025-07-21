@@ -1,0 +1,7 @@
+- name: Run all roles
+  hosts: all
+  become: true
+  roles:
+    - common
+    - docker
+    - app

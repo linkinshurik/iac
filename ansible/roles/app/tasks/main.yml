@@ -1,0 +1,12 @@
+- name: Copy docker-compose template
+  template:
+    src: docker-compose.yml.j2
+    dest: /home/ec2-user/docker-compose.yml
+    mode: '0644'
+
+- name: Start petclinic container
+  shell: |
+    docker-compose -f /home/ec2-user/docker-compose.yml down || true
+    docker-compose -f /home/ec2-user/docker-compose.yml up -d
+  args:
+    chdir: /home/ec2-user

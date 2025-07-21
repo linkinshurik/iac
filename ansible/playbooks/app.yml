@@ -1,0 +1,5 @@
+- name: Deploy spring-petclinic app
+  hosts: all
+  become: true
+  roles:
+    - app
