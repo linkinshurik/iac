@@ -1,0 +1,35 @@
+- name: Install node_exporter
+  shell: |
+    curl -s https://github.com/prometheus/node_exporter/releases/download/v1.8.1/node_exporter-1.8.1.linux-amd64.tar.gz \
+      | tar xz
+    cp node_exporter*/node_exporter /usr/local/bin/
+    useradd -rs /bin/false node_exporter || true
+    cat <<EOF > /etc/systemd/system/node_exporter.service
+    [Unit]
+    Description=Node Exporter
+    After=network.target
+
+    [Service]
+    User=node_exporter
+    ExecStart=/usr/local/bin/node_exporter
+
+    [Install]
+    WantedBy=default.target
+    EOF
+    systemctl daemon-reexec
+    systemctl enable --now node_exporter
+
+- name: Install grafana-agent
+  shell: |
+    curl -s -Lo /usr/local/bin/grafana-agent https://github.com/grafana/agent/releases/latest/download/grafana-agent-linux-amd64
+    chmod +x /usr/local/bin/grafana-agent
+
+- name: Configure grafana-agent
+  template:
+    src: grafana-agent.yml.j2
+    dest: /etc/grafana-agent.yaml
+
+- name: Start grafana-agent
+  shell: |
+    pkill grafana-agent || true
+    nohup grafana-agent run --config.file=/etc/grafana-agent.yaml &

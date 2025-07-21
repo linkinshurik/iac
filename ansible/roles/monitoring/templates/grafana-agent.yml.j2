@@ -1,0 +1,14 @@
+metrics:
+  global:
+    scrape_interval: 15s
+  configs:
+    - name: default
+      scrape_configs:
+        - job_name: 'node'
+          static_configs:
+            - targets: ['localhost:9100']
+      remote_write:
+        - url: '{{ grafana_url }}'
+          basic_auth:
+            username: '{{ grafana_user }}'
+            password: '{{ grafana_api_key }}'
